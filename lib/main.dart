@@ -1,12 +1,19 @@
 import 'package:evently_c21_online/core/app_provider/app_provider.dart';
-import 'package:evently_c21_online/core/theme/app_colors.dart';
 import 'package:evently_c21_online/core/theme/app_theme.dart';
 import 'package:evently_c21_online/modules/splash/screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
 }
@@ -26,6 +33,15 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             var provider = Provider.of<AppProvider>(context);
             return MaterialApp(
+              localizationsDelegates: [
+                AppLocalizations.delegate, // Add this line
+                ...GlobalMaterialLocalizations.delegates,
+              ],
+              supportedLocales: [
+                Locale('en'), // English
+                Locale('ar'), // Arabic
+              ],
+              locale: Locale(provider.langCode),
               themeMode: provider.themeMode,
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,

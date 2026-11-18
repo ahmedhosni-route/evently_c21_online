@@ -25,7 +25,7 @@ class SelectedWidget extends StatelessWidget {
       ),
       child: text == null
           ? Padding(
-              padding: EdgeInsetsGeometry.only(left: 10.w, right: 10.w),
+              padding: EdgeInsets.only(left: 10.w, right: 10.w),
               child: Image.asset(
                 icon!,
                 color: isSelected ? Colors.white : theme.primaryColorLight,

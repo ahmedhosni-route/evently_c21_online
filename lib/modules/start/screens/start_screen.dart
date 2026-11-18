@@ -1,4 +1,6 @@
 import 'package:evently_c21_online/core/app_provider/app_provider.dart';
+import 'package:evently_c21_online/l10n/app_localizations.dart';
+import 'package:evently_c21_online/modules/auth/screens/login_screen.dart';
 import 'package:evently_c21_online/modules/start/widgets/selected_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,10 +13,12 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = Provider.of<AppProvider>(context);
     var theme = Theme.of(context);
+    var locale = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsetsGeometry.all(16),
+          padding: EdgeInsets.all(16.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,59 +38,88 @@ class StartScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
-              Text(
-                "Personalize Your Experience",
-                style: theme.textTheme.titleLarge,
-              ),
+              Text(locale.startTitle, style: theme.textTheme.titleLarge),
               SizedBox(height: 8.h),
-              Text(
-                "Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.",
-                style: theme.textTheme.bodyMedium,
-              ),
+              Text(locale.startDesc, style: theme.textTheme.bodyMedium),
               SizedBox(height: 16.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Language",
-                        style: theme.textTheme.titleMedium
 
-                    ),
-                  ),
-                  SelectedWidget(text: "English"),
-                  SizedBox(width: 8.w),
-                  SelectedWidget(text: "Arabic", isSelected: false),
-                ],
-              ),
-              SizedBox(height: 16.h),
+              // Language Selector Row
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      "Theme",
-                      style: theme.textTheme.titleMedium
+                      locale.language,
+                      style: theme.textTheme.titleMedium,
                     ),
                   ),
                   InkWell(
                     onTap: () {
-                      provider.changeTheme(ThemeMode.light);
+                      provider.changeLanguage("en");
                     },
+                    child: SelectedWidget(
+                      text: locale.english,
+                      isSelected: provider.langCode == "en",
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  InkWell(
+                    onTap: () {
+                      provider.changeLanguage("ar");
+                    },
+                    child: SelectedWidget(
+                      text: locale.arabic,
+                      isSelected: provider.langCode == "ar",
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+
+              // Theme Selector Row
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      locale.theme,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => provider.changeTheme(ThemeMode.light),
                     child: SelectedWidget(
                       icon: "assets/images/sun.png",
                       isSelected: provider.themeMode == ThemeMode.light,
                     ),
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   InkWell(
-                    onTap: () {
-                      provider.changeTheme(ThemeMode.dark);
-                    },
+                    onTap: () => provider.changeTheme(ThemeMode.dark),
                     child: SelectedWidget(
                       icon: "assets/images/moon.png",
                       isSelected: provider.themeMode == ThemeMode.dark,
                     ),
                   ),
                 ],
+              ),
+              SizedBox(height: 24.h),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                      return LoginScreen();
+                    },));
+                  },
+                  child: Center(
+                    child: Text(
+                      "Let’s start",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
